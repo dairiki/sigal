@@ -284,7 +284,8 @@ explicit height ratio. #}
         height: 800/980,
         // lightbox: true,
         // _toggleInfo: false,
-        maxScaleRatio: 2
+        maxScaleRatio: 2,
+        autoplay: 5000
     });
     Galleria.run("#gallery");
 
@@ -318,15 +319,25 @@ explicit height ratio. #}
 
     Galleria.ready(function() {
         this.attachKeyboard({
-            right: this.next,
-            left: this.prev,
+            right: function () { this.pause().next(); },
+            left: function () { this.pause().prev(); },
             /* Toggle fullscreen display on press of 'f' key */
             0x46: this.toggleFullscreen,
             {% if settings.show_map and album.show_map %}
             /* Toggle map display on press of 'm' key */
             0x4D: galleryMapToggle,
             {% endif %}
+            // toggle slideshow when 'p' or 'P'
+            0x50: togglePlay,/* 'p' */
+            0x70: togglePlay /* 'P' */
         });
+
+        function togglePlay() {
+            if (! this.isPlaying()) {
+                this.next(); /* show next image immediately when starting */
+            }
+            this.playToggle();
+        }
 
         var gallery = this;
         $('#fullscreen').click(function() {

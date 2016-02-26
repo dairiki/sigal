@@ -59,6 +59,11 @@
         }
     </style>
     {% endif %}
+    <style type="text/css"">
+     {# Overide explicit height in css/style.css, since we pass Galleria an
+explicit height ratio. #}
+      #gallery { height: auto; }
+    </style>
   </head>
   <body>
     <div class="container">
@@ -268,7 +273,18 @@
 
     Galleria.configure({
         imageCrop: false,
-        transition: "fade"
+        transition: "fade",
+        /* Max image width is set by media query to #gallery { width: 980 }.
+        There a 10px margins, so maximum image width is 960.
+        There appears to be 80 pixels of extra height around the image panel
+        (60px for the thumbnails + two 10px margins).
+        If we want maximum image height of maxh = 720, we want the gallery
+        height to be 800.  This leads to this aspect ratio:
+         */
+        height: 800/980,
+        // lightbox: true,
+        // _toggleInfo: false,
+        maxScaleRatio: 2
     });
     Galleria.run("#gallery");
 
